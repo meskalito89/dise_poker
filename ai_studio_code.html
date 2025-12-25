@@ -3,179 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Покер на костях - Таблица счета</title>
+    <title>Покер на костях — Удобная Таблица</title>
     <style>
         :root {
             --primary: #2c3e50;
             --accent: #27ae60;
-            --bg: #f4f7f6;
-            --text: #333;
+            --bg: #f0f2f5;
+            --text: #222;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
+            font-size: 18px; /* Увеличенный базовый шрифт */
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
+
+        h1 { text-align: center; color: var(--primary); margin-bottom: 20px; }
 
         .controls {
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
         input[type="text"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             flex-grow: 1;
+            font-size: 18px;
         }
 
-        button {
-            padding: 10px 20px;
+        button.add-btn {
+            padding: 12px 25px;
             background-color: var(--accent);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #219150;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .boards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            align-items: start;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
         }
 
         .player-card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 15px;
-            border-top: 5px solid var(--primary);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            padding: 20px;
+            border-top: 8px solid var(--primary);
         }
 
-        h2 {
-            margin-top: 0;
-            color: var(--primary);
+        .player-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
+
+        .player-header h2 { margin: 0; font-size: 24px; color: var(--primary); }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
         }
 
         th, td {
-            padding: 8px;
+            padding: 12px 8px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .category-name {
-            font-size: 1.1em;
-            color: #555;
+            font-weight: 500;
+            color: #444;
+            font-size: 19px;
         }
 
+        /* Поля ввода */
         .score-input {
-            width: 60px;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
             text-align: center;
+            font-size: 18px;
+            font-weight: bold;
         }
 
-        /* Секция выполненных */
+        /* Кнопки фиксированных очков */
+        .fix-score-btn {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .fix-score-btn:hover { background: #c8e6c9; }
+
+        /* Заполненные строки */
         .completed-section {
-            background-color: #f9f9f9;
-            opacity: 0.7;
+            background-color: #fafafa;
+            opacity: 0.6;
         }
         
         .completed-section .category-name {
             text-decoration: line-through;
+            color: #888;
         }
 
         .section-divider {
-            background: #eee;
-            font-size: 0.7em;
+            background: #f8f9fa;
+            font-size: 14px;
             font-weight: bold;
             text-align: center;
-            padding: 5px 0;
-            color: #888;
+            padding: 10px 0;
+            color: #aaa;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .total-row {
+            background: #2c3e50 !important;
+            color: white;
+            font-size: 22px;
             font-weight: bold;
-            font-size: 1.1em;
-            background: #f0f0f0;
         }
 
-        .total-val {
-            color: var(--accent);
+        .total-val { color: #2ecc71; text-align: center; }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Покер на костях</h1>
+    <h1>🎲 Покер на костях</h1>
     
     <div class="controls">
-        <input type="text" id="playerName" placeholder="Имя игрока">
-        <button onclick="addPlayer()">Добавить игрока</button>
+        <input type="text" id="playerName" placeholder="Введите имя игрока...">
+        <button class="add-btn" onclick="addPlayer()">Добавить игрока</button>
     </div>
 
-    <div id="boards" class="boards-grid">
-        <!-- Сюда будут добавляться таблицы игроков -->
-    </div>
+    <div id="boards" class="boards-grid"></div>
 </div>
 
 <script>
+    // Настройка категорий: fixed - если есть фиксированный балл
     const categories = [
-        { id: 'ones', name: 'Единицы' },
-        { id: 'twos', name: 'Двойки' },
-        { id: 'threes', name: 'Тройки' },
-        { id: 'fours', name: 'Четверки' },
-        { id: 'fives', name: 'Пятерки' },
-        { id: 'sixes', name: 'Шестерки' },
-        { id: 'set3', name: 'Сет (3 одинаковых)' },
-        { id: 'set4', name: 'Каре (4 одинаковых)' },
-        { id: 'fullhouse', name: 'Фулл-хаус' },
-        { id: 'smallStr', name: 'М. Стрит' },
-        { id: 'largeStr', name: 'Б. Стрит' },
-        { id: 'poker', name: 'Покер' },
-        { id: 'chance', name: 'Шанс' }
+        { id: 'ones', name: 'Единицы', fixed: null },
+        { id: 'twos', name: 'Двойки', fixed: null },
+        { id: 'threes', name: 'Тройки', fixed: null },
+        { id: 'fours', name: 'Четверки', fixed: null },
+        { id: 'fives', name: 'Пятерки', fixed: null },
+        { id: 'sixes', name: 'Шестерки', fixed: null },
+        { id: 'pair', name: 'Пара', fixed: null },
+        { id: 'set3', name: 'Сет (3 одн.)', fixed: null },
+        { id: 'set4', name: 'Каре (4 одн.)', fixed: null },
+        { id: 'fullhouse', name: 'Фулл-хаус', fixed: 25 },
+        { id: 'smallStr', name: 'М. Стрит (4)', fixed: 30 },
+        { id: 'largeStr', name: 'Б. Стрит (5)', fixed: 40 },
+        { id: 'poker', name: 'Покер (5 одн.)', fixed: 50 },
+        { id: 'chance', name: 'Шанс', fixed: null }
     ];
 
     function addPlayer() {
         const nameInput = document.getElementById('playerName');
         const name = nameInput.value.trim();
-        
-        if (!name) {
-            alert("Введите имя игрока");
-            return;
-        }
+        if (!name) return;
 
-        const boardId = 'player-' + Date.now();
+        const boardId = 'p' + Date.now();
         const boardsContainer = document.getElementById('boards');
 
         const card = document.createElement('div');
@@ -184,36 +211,33 @@
 
         let rowsHtml = '';
         categories.forEach(cat => {
+            let inputField = cat.fixed 
+                ? `<button class="fix-score-btn" onclick="setFixedScore('${boardId}', '${cat.id}', ${cat.fixed})">${cat.fixed}</button>`
+                : `<input type="number" class="score-input" onchange="updateScore('${boardId}', '${cat.id}')" placeholder="0">`;
+
             rowsHtml += `
                 <tr id="${boardId}-${cat.id}" data-category="${cat.id}">
                     <td class="category-name">${cat.name}</td>
-                    <td>
-                        <input type="number" class="score-input" 
-                               onchange="updateScore('${boardId}', '${cat.id}')"
-                               placeholder="0">
-                    </td>
+                    <td id="cell-${boardId}-${cat.id}">${inputField}</td>
                 </tr>
             `;
         });
 
         card.innerHTML = `
-            <h2>${name} <span style="font-size: 0.6em; cursor:pointer" onclick="this.parentElement.parentElement.remove()">❌</span></h2>
+            <div class="player-header">
+                <h2>${name}</h2>
+                <button class="delete-btn" onclick="document.getElementById('${boardId}').remove()">✕</button>
+            </div>
             <table>
-                <thead>
-                    <tr><th>Категория</th><th>Очки</th></tr>
-                </thead>
-                <tbody class="available-rows">
-                    ${rowsHtml}
-                </tbody>
+                <tbody class="available-rows">${rowsHtml}</tbody>
                 <tbody class="divider-body" style="display:none">
                     <tr><td colspan="2" class="section-divider">Заполнено</td></tr>
                 </tbody>
-                <tbody class="completed-rows">
-                </tbody>
+                <tbody class="completed-rows"></tbody>
                 <tfoot>
                     <tr class="total-row">
-                        <td>ИТОГО:</td>
-                        <td class="total-val">0</td>
+                        <td>ИТОГО</td>
+                        <td class="total-val" id="total-${boardId}">0</td>
                     </tr>
                 </tfoot>
             </table>
@@ -223,53 +247,81 @@
         nameInput.value = '';
     }
 
+    // Для полей с ручным вводом
     function updateScore(boardId, catId) {
-        const card = document.getElementById(boardId);
         const row = document.getElementById(`${boardId}-${catId}`);
         const input = row.querySelector('input');
+        
+        if (input && input.value !== "") {
+            moveToCompleted(boardId, row);
+        } else {
+            moveToAvailable(boardId, row);
+        }
+        calculateTotal(boardId);
+    }
+
+    // Для полей с фиксированным нажатием
+    function setFixedScore(boardId, catId, score) {
+        const row = document.getElementById(`${boardId}-${catId}`);
+        const cell = document.getElementById(`cell-${boardId}-${catId}`);
+        
+        // Заменяем кнопку на статичное число с возможностью отмены
+        cell.innerHTML = `<span class="score-input" style="border:none; cursor:pointer" onclick="resetFixedScore('${boardId}','${catId}',${score})">${score}</span>`;
+        
+        moveToCompleted(boardId, row);
+        calculateTotal(boardId);
+    }
+
+    // Сброс фиксированного поля
+    function resetFixedScore(boardId, catId, score) {
+        const row = document.getElementById(`${boardId}-${catId}`);
+        const cell = document.getElementById(`cell-${boardId}-${catId}`);
+        cell.innerHTML = `<button class="fix-score-btn" onclick="setFixedScore('${boardId}', '${catId}', ${score})">${score}</button>`;
+        
+        moveToAvailable(boardId, row);
+        calculateTotal(boardId);
+    }
+
+    function moveToCompleted(boardId, row) {
+        const card = document.getElementById(boardId);
+        const completedBody = card.querySelector('.completed-rows');
+        const divider = card.querySelector('.divider-body');
+        
+        row.classList.add('completed-section');
+        completedBody.appendChild(row);
+        divider.style.display = 'table-row-group';
+    }
+
+    function moveToAvailable(boardId, row) {
+        const card = document.getElementById(boardId);
         const availableBody = card.querySelector('.available-rows');
         const completedBody = card.querySelector('.completed-rows');
         const divider = card.querySelector('.divider-body');
 
-        // Если введено значение, переносим в заполненные
-        if (input.value !== "") {
-            row.classList.add('completed-section');
-            completedBody.appendChild(row);
-            divider.style.display = 'table-row-group';
-        } else {
-            // Если значение стерли, возвращаем наверх
-            row.classList.remove('completed-section');
-            availableBody.appendChild(row);
-            
-            // Скрываем разделитель, если заполненных нет
-            if (completedBody.children.length === 0) {
-                divider.style.display = 'none';
-            }
+        row.classList.remove('completed-section');
+        availableBody.appendChild(row);
+        
+        if (completedBody.children.length === 0) {
+            divider.style.display = 'none';
         }
-
-        calculateTotal(boardId);
     }
 
     function calculateTotal(boardId) {
         const card = document.getElementById(boardId);
-        const inputs = card.querySelectorAll('.score-input');
         let total = 0;
-
-        inputs.forEach(input => {
-            const val = parseInt(input.value);
-            if (!isNaN(val)) {
-                total += val;
-            }
+        
+        // Считаем все числа в инпутах и в текстовых полях (после фиксации)
+        card.querySelectorAll('.score-input').forEach(el => {
+            let val = (el.tagName === 'INPUT') ? parseInt(el.value) : parseInt(el.innerText);
+            if (!isNaN(val)) total += val;
         });
 
-        card.querySelector('.total-val').innerText = total;
+        document.getElementById(`total-${boardId}`).innerText = total;
     }
 
-    // Позволяет добавлять игрока по нажатию Enter
-    document.getElementById('playerName').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            addPlayer();
-        }
+    // Добавление по Enter
+    document.getElementById('playerName').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addPlayer();
     });
 </script>
 
