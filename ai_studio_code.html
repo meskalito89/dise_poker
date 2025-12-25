@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Покер на костях - Таблица счета</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #27ae60;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex-grow: 1;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #219150;
+        }
+
+        .boards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 15px;
+            border-top: 5px solid var(--primary);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-name {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .score-input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Секция выполненных */
+        .completed-section {
+            background-color: #f9f9f9;
+            opacity: 0.7;
+        }
+        
+        .completed-section .category-name {
+            text-decoration: line-through;
+        }
+
+        .section-divider {
+            background: #eee;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px 0;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .total-row {
+            font-weight: bold;
+            font-size: 1.1em;
+            background: #f0f0f0;
+        }
+
+        .total-val {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Покер на костях</h1>
+    
+    <div class="controls">
+        <input type="text" id="playerName" placeholder="Имя игрока">
+        <button onclick="addPlayer()">Добавить игрока</button>
+    </div>
+
+    <div id="boards" class="boards-grid">
+        <!-- Сюда будут добавляться таблицы игроков -->
+    </div>
+</div>
+
+<script>
+    const categories = [
+        { id: 'ones', name: 'Единицы' },
+        { id: 'twos', name: 'Двойки' },
+        { id: 'threes', name: 'Тройки' },
+        { id: 'fours', name: 'Четверки' },
+        { id: 'fives', name: 'Пятерки' },
+        { id: 'sixes', name: 'Шестерки' },
+        { id: 'set3', name: 'Сет (3 одинаковых)' },
+        { id: 'set4', name: 'Каре (4 одинаковых)' },
+        { id: 'fullhouse', name: 'Фулл-хаус' },
+        { id: 'smallStr', name: 'М. Стрит' },
+        { id: 'largeStr', name: 'Б. Стрит' },
+        { id: 'poker', name: 'Покер' },
+        { id: 'chance', name: 'Шанс' }
+    ];
+
+    function addPlayer() {
+        const nameInput = document.getElementById('playerName');
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            alert("Введите имя игрока");
+            return;
+        }
+
+        const boardId = 'player-' + Date.now();
+        const boardsContainer = document.getElementById('boards');
+
+        const card = document.createElement('div');
+        card.className = 'player-card';
+        card.id = boardId;
+
+        let rowsHtml = '';
+        categories.forEach(cat => {
+            rowsHtml += `
+                <tr id="${boardId}-${cat.id}" data-category="${cat.id}">
+                    <td class="category-name">${cat.name}</td>
+                    <td>
+                        <input type="number" class="score-input" 
+                               onchange="updateScore('${boardId}', '${cat.id}')"
+                               placeholder="0">
+                    </td>
+                </tr>
+            `;
+        });
+
+        card.innerHTML = `
+            <h2>${name} <span style="font-size: 0.6em; cursor:pointer" onclick="this.parentElement.parentElement.remove()">❌</span></h2>
+            <table>
+                <thead>
+                    <tr><th>Категория</th><th>Очки</th></tr>
+                </thead>
+                <tbody class="available-rows">
+                    ${rowsHtml}
+                </tbody>
+                <tbody class="divider-body" style="display:none">
+                    <tr><td colspan="2" class="section-divider">Заполнено</td></tr>
+                </tbody>
+                <tbody class="completed-rows">
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td>ИТОГО:</td>
+                        <td class="total-val">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+
+        boardsContainer.appendChild(card);
+        nameInput.value = '';
+    }
+
+    function updateScore(boardId, catId) {
+        const card = document.getElementById(boardId);
+        const row = document.getElementById(`${boardId}-${catId}`);
+        const input = row.querySelector('input');
+        const availableBody = card.querySelector('.available-rows');
+        const completedBody = card.querySelector('.completed-rows');
+        const divider = card.querySelector('.divider-body');
+
+        // Если введено значение, переносим в заполненные
+        if (input.value !== "") {
+            row.classList.add('completed-section');
+            completedBody.appendChild(row);
+            divider.style.display = 'table-row-group';
+        } else {
+            // Если значение стерли, возвращаем наверх
+            row.classList.remove('completed-section');
+            availableBody.appendChild(row);
+            
+            // Скрываем разделитель, если заполненных нет
+            if (completedBody.children.length === 0) {
+                divider.style.display = 'none';
+            }
+        }
+
+        calculateTotal(boardId);
+    }
+
+    function calculateTotal(boardId) {
+        const card = document.getElementById(boardId);
+        const inputs = card.querySelectorAll('.score-input');
+        let total = 0;
+
+        inputs.forEach(input => {
+            const val = parseInt(input.value);
+            if (!isNaN(val)) {
+                total += val;
+            }
+        });
+
+        card.querySelector('.total-val').innerText = total;
+    }
+
+    // Позволяет добавлять игрока по нажатию Enter
+    document.getElementById('playerName').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            addPlayer();
+        }
+    });
+</script>
+
+</body>
+</html>
